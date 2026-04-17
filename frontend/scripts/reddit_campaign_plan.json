@@ -1,0 +1,30 @@
+{
+  "campaign_name": "Pumpprice_Seed_V1",
+  "status": "planned",
+  "targets": [
+    {
+      "url": "https://www.reddit.com/r/CarTalkUK/",
+      "audience": "Enthusiasts & Everyday Drivers",
+      "angle": "Data Analysis / Outrage",
+      "planned_content": "Title: I analysed the new CMA fuel data feeds. Motorway services are ripping us off by up to 30p/litre.\n\nBody: Morning everyone. I got sick of seeing petrol prices jump 15p just because I crossed a county line, so I hooked into the new government-mandated CMA open data feeds (which forces supermarkets to publish their live prices).\n\nI built a quick, free tool that lets you punch in your start and end postcodes, and it maps out the absolute cheapest petrol/diesel stations *directly on your route* (or within a 0.5-mile detour).\n\nIf you want to stop getting gouged, check it out: https://pumpprice.live. Let me know if you find any bugs!"
+    },
+    {
+      "url": "https://www.reddit.com/r/UKPersonalFinance/",
+      "audience": "Budget-conscious, Savers",
+      "angle": "Cost of Living / Practical Savings",
+      "planned_content": "Title: A tool to instantly cut your commuting fuel costs (Using CMA Open Data)\n\nBody: With the cost of living still biting, I wanted to share a free tool I built to combat the 'postcode lottery' of UK fuel prices.\n\nSupermarkets change their prices dynamically based on local competition. I tapped into their raw data feeds so you don't have to guess. You just enter your daily commute postcodes, and it calculates exactly where you should stop for the cheapest fill-up without wasting miles driving out of your way.\n\nNo ads, no signups, just raw data: https://pumpprice.live. Hope it helps a few of you save a tenner a week!"
+    },
+    {
+      "url": "https://www.reddit.com/r/deliveroo/",
+      "audience": "Gig Economy / Delivery Drivers",
+      "angle": "Profit Margin / Efficiency",
+      "planned_content": "Title: Stop wasting your profits on expensive petrol. Free routing tool for couriers.\n\nBody: Hey folks. Every penny you spend on fuel is a penny out of your earnings. I built a tool that hooks into the live supermarket pricing feeds (Asda, Tesco, etc.). \n\nIf you're doing a long drop or heading to a new zone, punch your postcodes into https://pumpprice.live. It will show you the cheapest station on your exact path so you aren't forced to pay a premium at the closest pump. Stay safe out there."
+    },
+    {
+      "url": "https://www.reddit.com/r/drivingUK/",
+      "audience": "General UK Motorists",
+      "angle": "Utility / Route Planning",
+      "planned_content": "Title: Planning a long journey this weekend? Don't buy fuel on the motorway.\n\nBody: Just a heads up for anyone doing a long drive. I've built a free routing tool that uses the live CMA supermarket data to find cheap fuel.\n\nInstead of paying 165p at the services, put your postcodes into https://pumpprice.live. It calculates your route and shows you the cheapest stations just a few minutes off the junctions. It’s completely free and covers about 4,500 stations live."
+    }
+  ]
+}

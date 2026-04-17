@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set timeout -1
+spawn sudo /home/linuxbrew/.linuxbrew/bin/certbot certonly --manual --preferred-challenges dns -d fuelly.live -d www.fuelly.live --agree-tos -m andrewjamesdaleuk@gmail.com --no-eff-email
+expect "Press Enter to Continue"
+send "\r"
+expect "Press Enter to Continue"
+send "\r"
+expect eof

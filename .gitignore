@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+frontend/node_modules
+.npm
+.cache
+
+# Environment Variables
+.env
+frontend/.env
+*.env.*
+
+# Build Outputs
+dist
+frontend/dist
+dev-dist
+frontend/dev-dist
+
+# Logs
+logs
+*.log
+frontend/*.log
+/root/.pm2/logs
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# PM2
+dump.pm2
+pumpprice_backup.zip
+
+# Supabase Local
+supabase/.temp
