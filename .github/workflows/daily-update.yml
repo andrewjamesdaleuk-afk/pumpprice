@@ -1,0 +1,40 @@
+name: Daily Fuel Insights Update
+
+on:
+  schedule:
+    # Run at 4:00 AM UTC every day
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install node-fetch dotenv
+
+      - name: 1. Run Harvester (Fetch new CMA data)
+        run: node force_harvester.cjs
+
+      - name: Wait for Harvester to finish
+        run: sleep 60
+
+      - name: 2. Update City Averages
+        run: node force_batch_cities.cjs
+
+      - name: 3. Update Precomputed Insights (Leaderboards)
+        run: node force_refresh_insights.js
