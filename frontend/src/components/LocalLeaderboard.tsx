@@ -19,8 +19,11 @@ interface LocalLeaderboardProps {
 }
 
 export const LocalLeaderboard = ({ stations, fuelType, cityName }: LocalLeaderboardProps) => {
-  // Sort by price and take top 10
-  const topStations = [...stations].sort((a, b) => a.price - b.price).slice(0, 10);
+  // Filter out invalid prices, sort by price, and take top 10
+  const topStations = [...stations]
+    .filter(s => s.price && s.price > 0)
+    .sort((a, b) => a.price - b.price)
+    .slice(0, 10);
 
   if (topStations.length === 0) return null;
 
@@ -55,10 +58,21 @@ export const LocalLeaderboard = ({ stations, fuelType, cityName }: LocalLeaderbo
                 </div>
                 <div className="text-right shrink-0 ml-4">
                   <div className="flex items-baseline gap-0.5 justify-end">
-                    <span className={`text-2xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
-                      {Math.floor(station.price)}.9
-                    </span>
-                    <span className="text-xs font-semibold text-slate-500">p</span>
+                    {station.countryCode === 'FR' ? (
+                      <>
+                        <span className="text-sm font-bold text-slate-500 mr-1">€</span>
+                        <span className={`text-2xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
+                          {(station.price / 100).toFixed(2)}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className={`text-2xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
+                          {Math.floor(station.price)}.9
+                        </span>
+                        <span className="text-xs font-semibold text-slate-500">p</span>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
