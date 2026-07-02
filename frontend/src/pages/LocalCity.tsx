@@ -254,7 +254,11 @@ export default function LocalCity() {
           <h1 className="text-4xl font-black text-white mb-6 uppercase tracking-tight">{pageHeading}</h1>
         </div>
 
-<section className="space-y-6 bg-slate-900/50 p-6 rounded-3xl border border-slate-800 shadow-xl">
+<p className="text-slate-400 text-sm font-medium px-2 pb-4">
+            Driving out of {cityData.h1.replace('Cheapest Fuel in ', '')}? Enter your destination to see live prices from every petrol station along your planned route.
+          </p>
+
+        <section className="space-y-6 bg-slate-900/50 p-6 rounded-3xl border border-slate-800 shadow-xl">
           <div className="space-y-4 relative">
             <div className="absolute left-[19px] top-[24px] bottom-[24px] w-[2px] bg-slate-800 z-0"></div>
 
@@ -445,9 +449,7 @@ export default function LocalCity() {
             </div>
           )}
 
-          <p className="text-slate-400 text-sm font-medium px-2 pb-4">
-            Driving out of {cityData.h1.replace('Cheapest Fuel in ', '')}? Enter your destination to see live prices from every petrol station along your planned route.
-          </p>
+
         </div>
 
 
