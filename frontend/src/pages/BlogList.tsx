@@ -33,7 +33,7 @@ export default function BlogList() {
         </div>
 
         <div className="space-y-4">
-          {posts.map(post => (
+          {[...posts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(post => (
             <Link 
               key={post.slug} 
               to={`/blog/${post.slug}`}
