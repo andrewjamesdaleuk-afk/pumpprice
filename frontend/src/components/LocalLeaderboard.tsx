@@ -49,7 +49,7 @@ export const LocalLeaderboard = ({ stations, fuelType, cityName }: LocalLeaderbo
                   <div>
                     <h4 className="font-bold text-white leading-tight">{station.brand}</h4>
                     <p className="text-sm text-slate-500 mt-0.5 line-clamp-1">
-                      {station.address}{station.postcode ? `, ${station.postcode}` : ''}
+                      {[station.address, station.postcode].filter(Boolean).join(' ')}
                     </p>
                   </div>
                 </div>
