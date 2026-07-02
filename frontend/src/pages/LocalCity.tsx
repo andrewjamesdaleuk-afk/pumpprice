@@ -9,6 +9,8 @@ import { fetchStationsNearRoute, fetchCityStats } from '../services/stations';
 import { formatCurrency } from '../utils/format';
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/Footer';
+import { SavingsCalculator } from '../components/SavingsCalculator';
+import { LocalLeaderboard } from '../components/LocalLeaderboard';
 
 export default function LocalCity() {
   const { slug } = useParams<{ slug: string }>();
@@ -34,7 +36,7 @@ export default function LocalCity() {
   const [selectedStation, setSelectedStation] = useState<any>(null);
   const [results, setResults] = useState<any[]>([]);
   const [stats, setStats] = useState<{ maxPrice: number, avgPrice: number } | null>(null);
-  const [cityStats, setCityStats] = useState<{ petrol: any, diesel: any } | null>(null);
+  const [cityStats, setCityStats] = useState<{ petrol: any, diesel: any, petrolStations?: any[], dieselStations?: any[] } | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -287,6 +289,28 @@ export default function LocalCity() {
               <p className="text-[10px] text-slate-500 mt-4 text-center">
                 Averaged across {cityStats.petrol ? cityStats.petrol.count : 0} stations within a 5-mile radius.
               </p>
+            </div>
+          )}
+
+          {cityStats && cityStats[fuelType] && (
+            <div className="mb-8 text-left">
+              <SavingsCalculator 
+                cityName={cityName}
+                fuelType={fuelType}
+                cheapestPrice={Number(cityStats[fuelType].min)}
+                averagePrice={Number(cityStats[fuelType].avg)}
+                maxPrice={Number(cityStats[fuelType].max)}
+              />
+            </div>
+          )}
+
+          {cityStats && cityStats[fuelType === 'petrol' ? 'petrolStations' : 'dieselStations'] && (
+            <div className="mb-8 text-left">
+              <LocalLeaderboard 
+                cityName={cityName}
+                fuelType={fuelType}
+                stations={cityStats[fuelType === 'petrol' ? 'petrolStations' : 'dieselStations'] || []}
+              />
             </div>
           )}
 

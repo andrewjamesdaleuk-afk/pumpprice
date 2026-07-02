@@ -16,6 +16,7 @@ export interface Station {
   lat?: number;
   lon?: number;
   is_motorway?: boolean;
+  country_code?: string;
 }
 
 const requestQueue: (() => Promise<void>)[] = [];
@@ -112,7 +113,7 @@ const MAJOR_CITIES: Record<string, {lat: number, lon: number}> = {
   'Cambridge': { lat: 52.2053, lon: 0.1218 }
 };
 
-export const fetchCityStats = async (postcodeOrCity: string, bufferMeters: number = 8046.72): Promise<{ petrol: any, diesel: any } | null> => {
+export const fetchCityStats = async (postcodeOrCity: string, bufferMeters: number = 8046.72): Promise<{ petrol: any, diesel: any, petrolStations?: any[], dieselStations?: any[] } | null> => {
   try {
     let lat: number;
     let lon: number;
@@ -148,7 +149,9 @@ export const fetchCityStats = async (postcodeOrCity: string, bufferMeters: numbe
 
     return {
       petrol: calcStats(petrolStations),
-      diesel: calcStats(dieselStations)
+      diesel: calcStats(dieselStations),
+      petrolStations,
+      dieselStations
     };
   } catch (error) {
     console.error('Error fetching city stats:', error);
