@@ -252,75 +252,9 @@ export default function LocalCity() {
         
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-black text-white mb-6 uppercase tracking-tight">{pageHeading}</h1>
-          
-          {/* City Stats Module */}
-          {cityStats && (
-            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 mb-8 text-left shadow-2xl">
-              <h2 className="text-lg font-bold text-slate-300 mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-emerald-400" />
-                Live Fuel Prices in {cityData.h1.replace('Cheapest Fuel in ', '')}
-              </h2>
-              
-              <div className="grid grid-cols-2 gap-4">
-                {/* Petrol Stats */}
-                {cityStats.petrol && (
-                  <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/50">
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Petrol (E10)</div>
-                    <div className="text-2xl min-[380px]:text-3xl font-black text-emerald-400 tracking-tighter mb-1 flex flex-wrap items-baseline gap-x-1">{Math.floor(Number(cityStats.petrol.avg))}<span>.9</span>p <span className="text-sm text-slate-500 font-medium">Avg</span></div>
-                    <div className="flex justify-between text-xs text-slate-400 mt-3 pt-3 border-t border-slate-800">
-                      <span>Low: <strong className="text-white">{cityStats.petrol.min}p</strong></span>
-                      <span>High: <strong className="text-white">{cityStats.petrol.max}p</strong></span>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Diesel Stats */}
-                {cityStats.diesel && (
-                  <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/50">
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Diesel (B7)</div>
-                    <div className="text-2xl min-[380px]:text-3xl font-black text-sky-400 tracking-tighter mb-1 flex flex-wrap items-baseline gap-x-1">{Math.floor(Number(cityStats.diesel.avg))}<span>.9</span>p <span className="text-sm text-slate-500 font-medium">Avg</span></div>
-                    <div className="flex justify-between text-xs text-slate-400 mt-3 pt-3 border-t border-slate-800">
-                      <span>Low: <strong className="text-white">{cityStats.diesel.min}p</strong></span>
-                      <span>High: <strong className="text-white">{cityStats.diesel.max}p</strong></span>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <p className="text-[10px] text-slate-500 mt-4 text-center">
-                Averaged across {cityStats.petrol ? cityStats.petrol.count : 0} stations within a 5-mile radius.
-              </p>
-            </div>
-          )}
-
-          {cityStats && cityStats[fuelType] && (
-            <div className="mb-8 text-left">
-              <SavingsCalculator 
-                cityName={cityName}
-                fuelType={fuelType}
-                cheapestPrice={Number(cityStats[fuelType].min)}
-                averagePrice={Number(cityStats[fuelType].avg)}
-                maxPrice={Number(cityStats[fuelType].max)}
-              />
-            </div>
-          )}
-
-          {cityStats && cityStats[fuelType === 'petrol' ? 'petrolStations' : 'dieselStations'] && (
-            <div className="mb-8 text-left">
-              <LocalLeaderboard 
-                cityName={cityName}
-                fuelType={fuelType}
-                stations={cityStats[fuelType === 'petrol' ? 'petrolStations' : 'dieselStations'] || []}
-              />
-            </div>
-          )}
-
-          <p className="text-slate-400 text-sm font-medium px-2 pb-4">
-            Driving out of {cityData.h1.replace('Cheapest Fuel in ', '')}? Enter your destination to see live prices from every petrol station along your planned route.
-          </p>
         </div>
 
-
-        <section className="space-y-6 bg-slate-900/50 p-6 rounded-3xl border border-slate-800 shadow-xl">
+<section className="space-y-6 bg-slate-900/50 p-6 rounded-3xl border border-slate-800 shadow-xl">
           <div className="space-y-4 relative">
             <div className="absolute left-[19px] top-[24px] bottom-[24px] w-[2px] bg-slate-800 z-0"></div>
 
@@ -446,6 +380,78 @@ export default function LocalCity() {
             )}
           </button>
         </section>
+
+        <div className="text-center space-y-2 mt-8">
+
+          
+          {/* City Stats Module */}
+          {cityStats && (
+            <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 mb-8 text-left shadow-2xl">
+              <h2 className="text-lg font-bold text-slate-300 mb-4 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-emerald-400" />
+                Live Fuel Prices in {cityData.h1.replace('Cheapest Fuel in ', '')}
+              </h2>
+              
+              <div className="grid grid-cols-2 gap-4">
+                {/* Petrol Stats */}
+                {cityStats.petrol && (
+                  <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/50">
+                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Petrol (E10)</div>
+                    <div className="text-2xl min-[380px]:text-3xl font-black text-emerald-400 tracking-tighter mb-1 flex flex-wrap items-baseline gap-x-1">{Math.floor(Number(cityStats.petrol.avg))}<span>.9</span>p <span className="text-sm text-slate-500 font-medium">Avg</span></div>
+                    <div className="flex justify-between text-xs text-slate-400 mt-3 pt-3 border-t border-slate-800">
+                      <span>Low: <strong className="text-white">{cityStats.petrol.min}p</strong></span>
+                      <span>High: <strong className="text-white">{cityStats.petrol.max}p</strong></span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Diesel Stats */}
+                {cityStats.diesel && (
+                  <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/50">
+                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Diesel (B7)</div>
+                    <div className="text-2xl min-[380px]:text-3xl font-black text-sky-400 tracking-tighter mb-1 flex flex-wrap items-baseline gap-x-1">{Math.floor(Number(cityStats.diesel.avg))}<span>.9</span>p <span className="text-sm text-slate-500 font-medium">Avg</span></div>
+                    <div className="flex justify-between text-xs text-slate-400 mt-3 pt-3 border-t border-slate-800">
+                      <span>Low: <strong className="text-white">{cityStats.diesel.min}p</strong></span>
+                      <span>High: <strong className="text-white">{cityStats.diesel.max}p</strong></span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <p className="text-[10px] text-slate-500 mt-4 text-center">
+                Averaged across {cityStats.petrol ? cityStats.petrol.count : 0} stations within a 5-mile radius.
+              </p>
+            </div>
+          )}
+
+          {cityStats && cityStats[fuelType] && (
+            <div className="mb-8 text-left">
+              <SavingsCalculator 
+                cityName={cityName}
+                fuelType={fuelType}
+                cheapestPrice={Number(cityStats[fuelType].min)}
+                averagePrice={Number(cityStats[fuelType].avg)}
+                maxPrice={Number(cityStats[fuelType].max)}
+              />
+            </div>
+          )}
+
+          {cityStats && cityStats[fuelType === 'petrol' ? 'petrolStations' : 'dieselStations'] && (
+            <div className="mb-8 text-left">
+              <LocalLeaderboard 
+                cityName={cityName}
+                fuelType={fuelType}
+                stations={cityStats[fuelType === 'petrol' ? 'petrolStations' : 'dieselStations'] || []}
+              />
+            </div>
+          )}
+
+          <p className="text-slate-400 text-sm font-medium px-2 pb-4">
+            Driving out of {cityData.h1.replace('Cheapest Fuel in ', '')}? Enter your destination to see live prices from every petrol station along your planned route.
+          </p>
+        </div>
+
+
+        
 
         {showResults && results.length > 0 && (
           <section className="space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-500">
