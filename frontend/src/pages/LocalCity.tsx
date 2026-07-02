@@ -6,15 +6,28 @@ import { MapPin, Navigation, ArrowRight } from 'lucide-react';
 import { NavigationBottomSheet } from '../components/NavigationBottomSheet';
 import { geocodePostcode, fetchRoute } from '../services/routing';
 import { fetchStationsNearRoute, fetchCityStats } from '../services/stations';
+import { formatCurrency } from '../utils/format';
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 
 export default function LocalCity() {
   const { slug } = useParams<{ slug: string }>();
-  const cityData = slug ? (localData as any)[slug] : null;
+  
+  let baseSlug = slug;
+  let initialFuelType: 'petrol' | 'diesel' = 'petrol';
+  
+  if (slug?.includes('-petrol-')) {
+    baseSlug = slug.replace('-petrol-', '-fuel-');
+    initialFuelType = 'petrol';
+  } else if (slug?.includes('-diesel-')) {
+    baseSlug = slug.replace('-diesel-', '-fuel-');
+    initialFuelType = 'diesel';
+  }
+
+  const cityData = baseSlug ? (localData as any)[baseSlug] : null;
 
   const [endPostcode, setEndPostcode] = useState('');
-  const [fuelType, setFuelType] = useState<'petrol' | 'diesel'>('petrol');
+  const [fuelType, setFuelType] = useState<'petrol' | 'diesel'>(initialFuelType);
   const [deviationRadius, setDeviationRadius] = useState<number>(804.672); // Default: 0.5 miles
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -76,7 +89,7 @@ export default function LocalCity() {
           } catch(e) {}
         }
         
-        const isStale = st.recorded_at ? (new Date().getTime() - new Date(st.recorded_at).getTime()) / (1000 * 60 * 60) > 24 : true;
+        const isStale = false;
         
         return {
           id: st.site_id || i,
@@ -89,11 +102,12 @@ export default function LocalCity() {
           recommended: i === 0,
           lat: st.location?.latitude,
           lng: st.location?.longitude,
-          isMotorway: st.is_motorway === true
+          isMotorway: st.is_motorway === true,
+          countryCode: st.country_code || 'GB'
         };
-      });
+      }).filter((r: any) => r.price > 0);
 
-      mappedResults.sort((a, b) => a.price - b.price);
+      mappedResults.sort((a: any, b: any) => a.price - b.price);
       if (mappedResults.length > 0) mappedResults[0].recommended = true;
       
       if (mappedResults.length > 1) {
@@ -122,11 +136,33 @@ export default function LocalCity() {
   };
 
   const cityName = cityData.h1.replace('Cheapest Fuel in ', '');
+  
+  let dynamicTitle = `${cityData.title} | Pumpprice`;
   let dynamicDescription = cityData.description;
-  if (cityStats && cityStats.petrol && cityStats.diesel) {
-    dynamicDescription = `Find the cheapest fuel in ${cityName} today. Petrol starts at ${cityStats.petrol.min}p and Diesel at ${cityStats.diesel.min}p. Compare live prices without taking a detour.`;
-  } else if (cityStats && cityStats.petrol) {
-    dynamicDescription = `Find the cheapest petrol in ${cityName} today. Prices start at ${cityStats.petrol.min}p. Compare live E10 prices without taking a detour.`;
+  let pageHeading = `Cheapest Petrol & Diesel in ${cityName}`;
+
+  if (slug?.includes('-petrol-')) {
+    dynamicTitle = `Cheapest Petrol Prices in ${cityName} | Live Updates | PumpPrice`;
+    pageHeading = `Cheapest Petrol in ${cityName}`;
+    if (cityStats && cityStats.petrol) {
+      dynamicDescription = `Find the cheapest petrol in ${cityName} today. Prices start at ${cityStats.petrol.min}p. Compare live E10 prices without taking a detour.`;
+    } else {
+      dynamicDescription = `Find the cheapest unleaded petrol in ${cityName} today. Compare live forecourt prices updated from the CMA Fuel Finder Open Data Scheme.`;
+    }
+  } else if (slug?.includes('-diesel-')) {
+    dynamicTitle = `Cheapest Diesel Prices in ${cityName} | Live Updates | PumpPrice`;
+    pageHeading = `Cheapest Diesel in ${cityName}`;
+    if (cityStats && cityStats.diesel) {
+      dynamicDescription = `Find the cheapest diesel in ${cityName} today. Prices start at ${cityStats.diesel.min}p. Compare live B7 prices without taking a detour.`;
+    } else {
+      dynamicDescription = `Find the cheapest diesel in ${cityName} today. Compare live forecourt prices updated from the CMA Fuel Finder Open Data Scheme.`;
+    }
+  } else {
+    if (cityStats && cityStats.petrol && cityStats.diesel) {
+      dynamicDescription = `Find the cheapest fuel in ${cityName} today. Petrol starts at ${cityStats.petrol.min}p and Diesel at ${cityStats.diesel.min}p. Compare live prices without taking a detour.`;
+    } else if (cityStats && cityStats.petrol) {
+      dynamicDescription = `Find the cheapest petrol in ${cityName} today. Prices start at ${cityStats.petrol.min}p. Compare live E10 prices without taking a detour.`;
+    }
   }
 
   const faqSchema = {
@@ -189,13 +225,13 @@ export default function LocalCity() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-emerald-500/30 pb-20">
       <Helmet>
-        <title>{`${cityData.title} | Pumpprice`}</title>
+        <title>{dynamicTitle}</title>
         <meta name="description" content={dynamicDescription} />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={`${cityData.title} | Pumpprice`} />
+        <meta property="og:title" content={dynamicTitle} />
         <meta property="og:description" content={dynamicDescription} />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={`${cityData.title} | Pumpprice`} />
+        <meta property="twitter:title" content={dynamicTitle} />
         <meta property="twitter:description" content={dynamicDescription} />
         <script type="application/ld+json">
           {JSON.stringify(faqSchema)}
@@ -213,7 +249,7 @@ export default function LocalCity() {
       <main className="max-w-md mx-auto px-6 py-6 space-y-4">
         
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-black text-white mb-6 uppercase tracking-tight">Cheapest Petrol & Diesel in {cityName}</h1>
+          <h1 className="text-4xl font-black text-white mb-6 uppercase tracking-tight">{pageHeading}</h1>
           
           {/* City Stats Module */}
           {cityStats && (
@@ -284,7 +320,7 @@ export default function LocalCity() {
                 <MapPin className="w-4 h-4 text-rose-500" />
               </div>
               <div className="flex-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1 block">End Postcode</label>
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1 block">End Postcode (UK or FR)</label>
                 <input 
                   type="text" 
                   placeholder="e.g. BS1 5TR" 
@@ -408,9 +444,9 @@ export default function LocalCity() {
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <div className="flex items-center gap-2">
+                            <span className="text-sm grayscale-[0.2]">{station.countryCode === 'FR' ? '🇫🇷' : '🇬🇧'}</span>
                             <h3 className="font-bold text-lg text-white">{station.brand}</h3>
-                            {station.isMotorway && (
-                              <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-amber-500/30">
+                            {station.isMotorway && (                              <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-amber-500/30">
                                 Motorway
                               </span>
                             )}
@@ -421,17 +457,26 @@ export default function LocalCity() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <div className="flex items-baseline gap-1 justify-end">
-                            <span className={`text-3xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
-                              {station.price}
-                            </span>
-                            <span className="text-sm font-semibold text-slate-500">p</span>
+                          <div className="flex items-baseline gap-0.5 justify-end">
+                            {station.countryCode === 'GB' ? (
+                              <>
+                                <span className={`text-3xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
+                                  {Math.floor(station.price)}.9
+                                </span>
+                                <span className="text-sm font-semibold text-slate-500">p</span>
+                              </>
+                            ) : (                              <>
+                                <span className="text-sm font-bold text-slate-500 mr-1">€</span>
+                                <span className={`text-3xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
+                                  {(station.price / 100).toFixed(2)}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div className="text-[10px] text-slate-500/80 font-medium mt-1 pr-1">
-                            Updated: {station.lastUpdated}
+                            Price changed: {station.lastUpdated}
                           </div>
-                        </div>
-                      </div>
+                        </div>                      </div>
 
                       <button 
                         onClick={() => setSelectedStation(station)}
@@ -445,21 +490,24 @@ export default function LocalCity() {
                       <div className={`bg-gradient-to-br border-l border-r border-b rounded-b-2xl p-4 flex flex-col gap-3 ${fuelType === "diesel" ? "from-sky-500/10 to-blue-500/5 border-sky-500/20" : "from-emerald-500/10 to-teal-500/5 border-emerald-500/20"}`}>
                         <div className="flex justify-between items-center text-sm">
                           <span className={`font-medium ${fuelType === "diesel" ? "text-sky-300/80" : "text-emerald-300/80"}`}>vs. Most Expensive:</span>
-                          <span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.maxPrice - station.price).toFixed(1)}p / L cheaper</span>
+                          <span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.maxPrice - station.price).toFixed(1)}{station.countryCode === 'GB' ? 'p' : 'c'} / L cheaper</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
                           <span className={`font-medium ${fuelType === "diesel" ? "text-sky-300/80" : "text-emerald-300/80"}`}>vs. Route Average:</span>
-                          <span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.avgPrice - station.price).toFixed(1)}p / L cheaper</span>
+                          <span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.avgPrice - station.price).toFixed(1)}{station.countryCode === 'GB' ? 'p' : 'c'} / L cheaper</span>
                         </div>
                         <div className={`pt-3 border-t mt-1 flex justify-between items-end ${fuelType === "diesel" ? "border-sky-500/10" : "border-emerald-500/10"}`}>
                           <div className="text-xs text-slate-400 max-w-[60%]">
                             Estimated savings on a full 60L tank vs maximum price
                           </div>
                           <div className={`text-xl font-black tracking-tight ${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'}`}>
-                            Save £{(((stats.maxPrice - station.price) * 60) / 100).toFixed(2)}
+                            {station.countryCode === 'GB' ? (
+                              <>Save £{(((stats.maxPrice - station.price) * 60) / 100).toFixed(2)}</>
+                            ) : (
+                              <>Save €{(((stats.maxPrice - station.price) * 60) / 100).toFixed(2)}</>
+                            )}
                           </div>
-                        </div>
-                      </div>
+                        </div>                      </div>
                     )}
                   </div>
                 </div>

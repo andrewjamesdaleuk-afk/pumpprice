@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let file = fs.readFileSync('Pumpprice/frontend/src/content/localData.ts', 'utf8');
+let file = fs.readFileSync('frontend/src/content/localData.ts', 'utf8');
 // Just parse the JSON object out of the string
 let jsonStr = file.replace('export const localData = ', '');
 jsonStr = jsonStr.replace(/;$/, '');
@@ -68,8 +68,27 @@ posts.forEach(slug => {
 });
 
 Object.keys(localData).forEach(slug => {
+  // Base generic URL
   xml += `  <url>
     <loc>${domain}/city/${slug}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>\n`;
+
+  // Petrol specific URL
+  const petrolSlug = slug.replace('-fuel-', '-petrol-');
+  xml += `  <url>
+    <loc>${domain}/city/${petrolSlug}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>\n`;
+
+  // Diesel specific URL
+  const dieselSlug = slug.replace('-fuel-', '-diesel-');
+  xml += `  <url>
+    <loc>${domain}/city/${dieselSlug}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
@@ -78,5 +97,5 @@ Object.keys(localData).forEach(slug => {
 
 xml += `</urlset>`;
 
-fs.writeFileSync('Pumpprice/frontend/public/sitemap.xml', xml);
-console.log(`Sitemap generated with ${posts.length} posts and ${Object.keys(localData).length} cities.`);
+fs.writeFileSync('frontend/public/sitemap.xml', xml);
+console.log(`Sitemap generated with ${posts.length} posts and ${Object.keys(localData).length * 3} city pages.`);
