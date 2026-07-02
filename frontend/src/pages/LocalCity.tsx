@@ -254,7 +254,7 @@ export default function LocalCity() {
           <h1 className="text-4xl font-black text-white mb-6 uppercase tracking-tight">{pageHeading}</h1>
         </div>
 
-<p className="text-slate-400 text-sm font-medium px-2 pb-4">
+<p className="text-slate-400 text-sm font-medium px-2 pb-4 text-center">
             Driving out of {cityData.h1.replace('Cheapest Fuel in ', '')}? Enter your destination to see live prices from every petrol station along your planned route.
           </p>
 
