@@ -6,26 +6,10 @@ let jsonStr = file.replace('export const localData = ', '');
 jsonStr = jsonStr.replace(/;$/, '');
 const localData = JSON.parse(jsonStr);
 
-const posts = [
-  "cheapest-time-to-buy-fuel-uk",
-  "e10-vs-e5-petrol-differences",
-  "uk-fuel-price-fluctuations-explained",
-  "how-to-improve-mpg-fuel-economy",
-  "anatomy-of-uk-fuel-prices",
-  "global-conflicts-uk-pump-prices",
-  "hypermiling-extreme-fuel-saving",
-  "supermarket-vs-premium-fuels",
-  "diesel-vs-petrol-running-costs-2026",
-  "ev-charging-vs-traditional-fuel-costs",
-  "do-fuel-additives-work",
-  "fuel-duty-freeze-impact",
-  "top-apps-to-find-cheap-fuel-uk",
-  "is-carpooling-worth-the-effort",
-  "future-of-synthetic-fuels-uk",
-  "cheapest-petrol-m1-motorway-services",
-  "asda-vs-tesco-cheapest-supermarket-fuel",
-  "company-car-mileage-allowance-profit"
-];
+// Read posts dynamically
+let postsFile = fs.readFileSync('frontend/src/content/posts.ts', 'utf8');
+const slugMatches = [...postsFile.matchAll(/slug:\s*"([^"]+)"/g)].map(m => m[1]);
+const posts = [...new Set(slugMatches)]; // ensure uniqueness
 
 const today = new Date().toISOString().split('T')[0];
 const domain = 'https://pumpprice.live';
