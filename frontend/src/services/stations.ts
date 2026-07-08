@@ -209,7 +209,7 @@ export const fetchRankedCities = async (type: "cheapest" | "expensive", _fuelTyp
     const safeKey = anonKey;
 
     const precomputedId = `${type}_cities_${_fuelType.toLowerCase()}`;
-    const precomputedRes = await fetch(`${safeUrl}/rest/v1/precomputed_insights?id=eq.${precomputedId}&select=data`, {
+    const precomputedRes = await fetch(`${safeUrl}/rest/v1/precomputed_insights?id=eq.${precomputedId}&country_code=eq.GB&select=data`, {
       method: 'GET',
       headers: {
         'apikey': safeKey,
@@ -403,7 +403,7 @@ export const fetchPremiumGap = async (fuelType: 'petrol' | 'diesel' = 'petrol'):
     // Try fetching from precomputed table first
     const precomputedId = `premium_gap_${param.toLowerCase()}`;
     try {
-      const precomputedRes = await fetch(`${safeUrl}/rest/v1/precomputed_insights?id=eq.${precomputedId}&select=data`, {
+      const precomputedRes = await fetch(`${safeUrl}/rest/v1/precomputed_insights?id=eq.${precomputedId}&country_code=eq.GB&select=data`, {
         method: 'GET',
         headers: {
           'apikey': safeKey,
@@ -516,7 +516,7 @@ export const fetchBrandLeaderboard = async (_fuelType: 'E10' | 'B7' = 'E10'): Pr
     let data = null;
 
     try {
-      const precomputedRes = await fetch(`${safeUrl}/rest/v1/precomputed_insights?id=eq.${precomputedId}&select=data`, {
+      const precomputedRes = await fetch(`${safeUrl}/rest/v1/precomputed_insights?id=eq.${precomputedId}&country_code=eq.GB&select=data`, {
         method: 'GET',
         headers: {
           'apikey': safeKey,
