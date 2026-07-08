@@ -32,5 +32,5 @@ The CMA recently forced supermarkets to publish their live fuel prices, but nobo
 I built pumpprice.live to solve this. It's an ad-free map tool where Merseyside drivers can enter their start and end postcodes, and it highlights the cheapest supermarket fuel directly on their route. It exposes the massive price gaps between different boroughs in Liverpool. Hope it's a helpful resource for your readers!
 `;
 
-fs.writeFileSync('Pumpprice/frontend/scripts/REGIONAL_PR_CAMPAIGN.md', regionalPitches);
+fs.writeFileSync('frontend/scripts/REGIONAL_PR_CAMPAIGN.md', regionalPitches);
 console.log("Generated Regional PR Pitch Document.");

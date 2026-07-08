@@ -1,4 +1,4 @@
-require('dotenv').config({ path: 'frontend/.env' });
+require('dotenv').config({ path: '.env' });
 const fetch = require('node-fetch');
 
 async function run() {

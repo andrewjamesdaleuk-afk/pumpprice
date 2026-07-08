@@ -9,7 +9,7 @@ export interface RouteData {
 
 export const geocodePostcode = async (postcode: string): Promise<[number, number] | null> => {
   try {
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(postcode)}&format=json&countrycodes=gb`);
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(postcode)}&format=json&countrycodes=gb,fr`);
     const data = await response.json();
     if (data && data.length > 0) {
       return [parseFloat(data[0].lon), parseFloat(data[0].lat)];

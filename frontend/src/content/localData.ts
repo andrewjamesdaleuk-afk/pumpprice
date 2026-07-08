@@ -574,5 +574,17 @@ export const localData = {
     "description": "Find the absolute cheapest live fuel prices in Chesterfield. We use CMA open data to map out the lowest petrol and diesel costs across the city.",
     "h1": "Cheapest Fuel in Chesterfield",
     "postcode": "S1 2JA"
+  },
+  "cheapest-fuel-in-paris": {
+    "title": "Prix des carburants les moins chers à Paris | Carte en direct",
+    "description": "Trouvez les prix des carburants les moins chers à Paris. Nous utilisons les données ouvertes du gouvernement pour cartographier les coûts les plus bas.",
+    "h1": "Cheapest Fuel in Paris",
+    "postcode": "75001"
+  },
+  "cheapest-fuel-in-calais": {
+    "title": "Prix des carburants les moins chers à Calais | Économies Eurotunnel",
+    "description": "Trouvez les prix des carburants les moins chers à Calais avant de traverser la Manche. Économisez sur votre plein.",
+    "h1": "Cheapest Fuel in Calais",
+    "postcode": "62100"
   }
 };

@@ -99,7 +99,7 @@ export function ExpensiveCitiesInsight() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div className={`text-3xl font-black tracking-tighter flex items-baseline ${fuelType === 'E10' ? 'text-emerald-400' : 'text-sky-400'}`}>
-                        {Math.floor(Number(city.price))}<span>.9</span>p
+                        {Math.floor(Number(city.price))}.9<span className="text-sm font-semibold text-slate-500">p</span>
                       </div>
                       <div className="text-right">
                         <span className="text-[10px] text-slate-500 font-bold uppercase block mb-0.5">Vs National Avg</span>

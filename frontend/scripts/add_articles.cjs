@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let content = fs.readFileSync('Pumpprice/frontend/src/content/posts.ts', 'utf8');
+let content = fs.readFileSync('frontend/src/content/posts.ts', 'utf8');
 
 const newArticles = `
   {
@@ -46,5 +46,5 @@ const newArticles = `
 // Insert before the last array bracket
 content = content.replace(/];$/, newArticles + "\n];");
 
-fs.writeFileSync('Pumpprice/frontend/src/content/posts.ts', content);
+fs.writeFileSync('frontend/src/content/posts.ts', content);
 console.log("Added 2 new articles to posts.ts");

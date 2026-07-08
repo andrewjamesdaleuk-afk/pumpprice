@@ -29,5 +29,5 @@ These are specific, high-traffic Reddit threads from the past year discussing fu
 ---
 `;
 
-fs.writeFileSync('Pumpprice/frontend/scripts/REDDIT_HIJACK_LINKS.md', manualRedditThreads);
+fs.writeFileSync('frontend/scripts/REDDIT_HIJACK_LINKS.md', manualRedditThreads);
 console.log("Generated Reddit Hijack Document.");

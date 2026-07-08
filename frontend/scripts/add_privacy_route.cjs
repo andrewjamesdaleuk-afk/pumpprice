@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let main = fs.readFileSync('Pumpprice/frontend/src/main.tsx', 'utf8');
+let main = fs.readFileSync('frontend/src/main.tsx', 'utf8');
 
 if (!main.includes("import Privacy")) {
   main = main.replace(
@@ -13,7 +13,7 @@ if (!main.includes("import Privacy")) {
     '<Route path="/locations" element={<LocationsIndex />} />\n        <Route path="/privacy" element={<Privacy />} />'
   );
   
-  fs.writeFileSync('Pumpprice/frontend/src/main.tsx', main);
+  fs.writeFileSync('frontend/src/main.tsx', main);
   console.log("Added Privacy route to main.tsx");
 } else {
   console.log("Privacy route already exists.");

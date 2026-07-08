@@ -1,12 +1,12 @@
 const fs = require('fs');
 
 const filesToUpdate = [
-  { path: 'Pumpprice/frontend/src/App.tsx', isRoot: true },
-  { path: 'Pumpprice/frontend/src/pages/BlogList.tsx', isRoot: false },
-  { path: 'Pumpprice/frontend/src/pages/BlogPost.tsx', isRoot: false },
-  { path: 'Pumpprice/frontend/src/pages/About.tsx', isRoot: false },
-  { path: 'Pumpprice/frontend/src/pages/LocalCity.tsx', isRoot: false },
-  { path: 'Pumpprice/frontend/src/pages/LocationsIndex.tsx', isRoot: false }
+  { path: 'frontend/src/App.tsx', isRoot: true },
+  { path: 'frontend/src/pages/BlogList.tsx', isRoot: false },
+  { path: 'frontend/src/pages/BlogPost.tsx', isRoot: false },
+  { path: 'frontend/src/pages/About.tsx', isRoot: false },
+  { path: 'frontend/src/pages/LocalCity.tsx', isRoot: false },
+  { path: 'frontend/src/pages/LocationsIndex.tsx', isRoot: false }
 ];
 
 filesToUpdate.forEach(({ path, isRoot }) => {

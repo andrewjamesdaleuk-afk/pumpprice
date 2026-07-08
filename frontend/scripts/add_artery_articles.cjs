@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let content = fs.readFileSync('Pumpprice/frontend/src/content/posts.ts', 'utf8');
+let content = fs.readFileSync('frontend/src/content/posts.ts', 'utf8');
 
 const newArticles = `
   {
@@ -78,5 +78,5 @@ const newArticles = `
 `;
 
 content = content.replace(/];$/, newArticles + "\n];");
-fs.writeFileSync('Pumpprice/frontend/src/content/posts.ts', content);
+fs.writeFileSync('frontend/src/content/posts.ts', content);
 console.log("Appended 3 new SEO articles to posts.ts");

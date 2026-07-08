@@ -6,7 +6,7 @@ export function Footer() {
     <footer className="w-full px-6 py-6 border-t border-slate-800/50 mt-6 bg-slate-950/50 text-center pb-20">
       <div className="max-w-xl mx-auto flex flex-col items-center">
         <p className="text-xs font-medium text-slate-500 mb-5 max-w-[280px] leading-relaxed">
-          Data provided by CMA Open Data feeds.<br/>Prices updated dynamically.
+          Prices updated dynamically.
         </p>
         
         <div className="flex flex-row flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[13px] font-semibold mb-6">

@@ -64,7 +64,7 @@ export function UKPriceTrend() {
           <div className="bg-[#0b101e] rounded-xl p-4 border border-slate-800/80">
             <div className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Petrol (E10)</div>
             <div className="text-2xl min-[380px]:text-3xl font-black text-emerald-400 tracking-tighter mb-4 flex flex-wrap items-baseline gap-x-1">
-              {Math.floor(Number(latest.petrol_avg))}<span>.9</span>p <span className="text-sm font-medium text-slate-500">Avg</span>
+              {Math.floor(Number(latest.petrol_avg))}.9<span className="text-sm font-semibold text-slate-500">p</span> <span className="text-sm font-medium text-slate-500 ml-1">Avg</span>
             </div>
             <div className="flex justify-between border-t border-slate-800/50 pt-3">
               <div className="flex flex-col">
@@ -83,7 +83,7 @@ export function UKPriceTrend() {
           <div className="bg-[#0b101e] rounded-xl p-4 border border-slate-800/80">
             <div className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Diesel (B7)</div>
             <div className="text-2xl min-[380px]:text-3xl font-black text-sky-400 tracking-tighter mb-4 flex flex-wrap items-baseline gap-x-1">
-              {Math.floor(Number(latest.diesel_avg))}<span>.9</span>p <span className="text-sm font-medium text-slate-500">Avg</span>
+              {Math.floor(Number(latest.diesel_avg))}.9<span className="text-sm font-semibold text-slate-500">p</span> <span className="text-sm font-medium text-slate-500 ml-1">Avg</span>
             </div>
             <div className="flex justify-between border-t border-slate-800/50 pt-3">
               <div className="flex flex-col">

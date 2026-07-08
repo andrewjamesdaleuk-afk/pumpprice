@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let stationsTS = fs.readFileSync('Pumpprice/frontend/src/services/stations.ts', 'utf8');
+let stationsTS = fs.readFileSync('frontend/src/services/stations.ts', 'utf8');
 
 stationsTS = stationsTS.replace(
   "fuelType: 'petrol' | 'diesel'",
@@ -12,9 +12,9 @@ stationsTS = stationsTS.replace(
   "let fuelTypeParam = 'E10';\n    if (fuelType === 'diesel') fuelTypeParam = 'B7';\n    if (fuelType === 'premium_petrol') fuelTypeParam = 'E5';\n    if (fuelType === 'premium_diesel') fuelTypeParam = 'SDV';"
 );
 
-fs.writeFileSync('Pumpprice/frontend/src/services/stations.ts', stationsTS);
+fs.writeFileSync('frontend/src/services/stations.ts', stationsTS);
 
-let appTSX = fs.readFileSync('Pumpprice/frontend/src/App.tsx', 'utf8');
+let appTSX = fs.readFileSync('frontend/src/App.tsx', 'utf8');
 
 appTSX = appTSX.replace(
   "const [fuelType, setFuelType] = useState<'petrol' | 'diesel'>('petrol');",
@@ -64,6 +64,6 @@ const newToggle = `          {/* Fuel Type Toggle */}
 
 appTSX = appTSX.replace(originalToggle, newToggle);
 
-fs.writeFileSync('Pumpprice/frontend/src/App.tsx', appTSX);
+fs.writeFileSync('frontend/src/App.tsx', appTSX);
 console.log("Updated Fuel Types to include Premium options.");
 

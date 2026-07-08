@@ -53,5 +53,5 @@ These are 15-to-30 second video scripts designed to go viral without needing a m
 *   **TTS Voice:** "It shows the absolute cheapest station on your exact path so you never overpay again. Link in bio."
 `;
 
-fs.writeFileSync('Pumpprice/frontend/scripts/TIKTOK_REELS_SCRIPTS.md', tiktokScript);
+fs.writeFileSync('frontend/scripts/TIKTOK_REELS_SCRIPTS.md', tiktokScript);
 console.log("Generated TikTok Scripts Document.");

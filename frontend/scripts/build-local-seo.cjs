@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let file = fs.readFileSync('Pumpprice/frontend/src/pages/LocalCity.tsx', 'utf8');
+let file = fs.readFileSync('frontend/src/pages/LocalCity.tsx', 'utf8');
 
 // 1. Add fetchCityStats import
 file = file.replace(
@@ -91,5 +91,5 @@ file = file.replace(
   statsModule
 );
 
-fs.writeFileSync('Pumpprice/frontend/src/pages/LocalCity.tsx', file);
+fs.writeFileSync('frontend/src/pages/LocalCity.tsx', file);
 console.log("Injected Stats Module into LocalCity.tsx");

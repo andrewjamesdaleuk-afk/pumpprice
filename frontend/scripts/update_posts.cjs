@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let content = fs.readFileSync('Pumpprice/frontend/src/content/posts.ts', 'utf8');
+let content = fs.readFileSync('frontend/src/content/posts.ts', 'utf8');
 
 // E10 vs E5 Petrol
 content = content.replace(
@@ -86,5 +86,5 @@ content = content.replace(
   'difficult to electrify, like aviation and motorsport. While we wait for e-fuels to become affordable, standard combustion drivers can rely on <strong>Pumpprice.live</strong> to keep today\'s driving costs down.</p>'
 );
 
-fs.writeFileSync('Pumpprice/frontend/src/content/posts.ts', content);
+fs.writeFileSync('frontend/src/content/posts.ts', content);
 console.log("Updated all posts!");

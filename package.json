@@ -14,9 +14,15 @@
     "delete": "npx pm2 delete ecosystem.config.cjs",
     "status": "npx pm2 status",
     "logs": "npx pm2 logs",
-    "sitemap": "node frontend/scripts/generate_sitemap.js"
+    "sitemap": "node frontend/scripts/generate_sitemap.cjs"
   },
   "devDependencies": {
-    "pm2": "^5.3.0"
+    "pm2": "^5.3.0",
+    "vercel": "^54.18.7"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
+    "dotenv": "^17.4.2",
+    "node-fetch": "^2.7.0"
   }
 }

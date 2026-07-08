@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let html = fs.readFileSync('Pumpprice/frontend/index.html', 'utf8');
+let html = fs.readFileSync('frontend/index.html', 'utf8');
 
 const seoTags = `
     <meta name="description" content="Find the cheapest petrol and diesel on your route. Enter your postcodes to compare live UK supermarket fuel prices without taking a detour." />
@@ -21,5 +21,5 @@ const seoTags = `
 `;
 
 html = html.replace('<title>Pumpprice</title>', `<title>Pumpprice</title>${seoTags}`);
-fs.writeFileSync('Pumpprice/frontend/index.html', html);
+fs.writeFileSync('frontend/index.html', html);
 console.log("SEO Tags added to index.html");

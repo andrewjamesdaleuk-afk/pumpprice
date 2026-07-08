@@ -107,7 +107,7 @@ export function BrandLeaderboard() {
                     index === leaderboard.length - 1 ? 'text-red-400' :
                     'text-white'
                   }`}>
-                    {Math.floor(brand.price)}<span>.9</span>p
+                    {Math.floor(brand.price)}.9<span className="text-sm font-semibold text-slate-500">p</span>
                   </div>
                 </div>
               </div>

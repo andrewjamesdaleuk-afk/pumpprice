@@ -44,6 +44,31 @@ serve(async (req) => {
       throw error;
     }
 
+    // Since the RPC doesn't return recorded_at, we need to fetch it to prevent "Unknown" dates in the UI
+    const stationIds = stations?.map(s => s.station_id) || [];
+    if (stationIds.length > 0) {
+      const { data: pricesData } = await supabaseClient
+        .from('prices')
+        .select('station_id, recorded_at')
+        .in('station_id', stationIds)
+        .eq('fuel_type', fuelType)
+        .order('recorded_at', { ascending: false });
+
+      if (pricesData) {
+        // Map latest recorded_at to each station
+        const latestPricesMap = new Map();
+        for (const p of pricesData) {
+           if (!latestPricesMap.has(p.station_id)) {
+               latestPricesMap.set(p.station_id, p.recorded_at);
+           }
+        }
+        
+        stations.forEach(s => {
+           s.recorded_at = latestPricesMap.get(s.station_id) || null;
+        });
+      }
+    }
+
     return new Response(
       JSON.stringify({
         route_polyline: routeGeometry,

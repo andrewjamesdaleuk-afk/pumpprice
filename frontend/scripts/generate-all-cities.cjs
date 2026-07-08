@@ -118,5 +118,5 @@ uniqueCities.forEach(city => {
   };
 });
 
-fs.writeFileSync('Pumpprice/frontend/src/content/localData.ts', `export const localData = ${JSON.stringify(seoData, null, 2)};`);
+fs.writeFileSync('frontend/src/content/localData.ts', `export const localData = ${JSON.stringify(seoData, null, 2)};`);
 console.log(`Generated massive SEO database for ${uniqueCities.length} UK cities.`);

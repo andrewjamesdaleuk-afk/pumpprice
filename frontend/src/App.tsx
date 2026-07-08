@@ -8,10 +8,11 @@ import polyline from '@mapbox/polyline';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Login } from './components/Login';
 import { Account } from './components/Account';
+import { detectCountry } from './utils/postcode';
+import { formatCurrency } from './utils/format';
 
 import { Footer } from './components/Footer';
 import { UKPriceTrend } from './components/UKPriceTrend';
-import { PriceProjectionCard } from './components/PriceProjectionCard';
 
 function AppContent() {
   const { user, profile } = useAuth();
@@ -150,7 +151,7 @@ function AppContent() {
           } catch(e) {}
         }
         
-        const isStale = st.recorded_at ? (new Date().getTime() - new Date(st.recorded_at).getTime()) / (1000 * 60 * 60) > 24 : true;
+        const isStale = false;
         
         return {
           id: st.site_id || i,
@@ -164,9 +165,10 @@ function AppContent() {
           lat: st.location?.latitude,
           lng: st.location?.longitude,
           isMotorway: st.is_motorway === true,
-          rawDistance: st.distance_from_route || 0
+          rawDistance: st.distance_from_route || 0,
+          countryCode: st.country_code || 'GB'
         };
-      });
+      }).filter((r: any) => r.price > 0);
 
       if (searchMode === 'local' && localSortBy === 'closest') {
         mappedResults.sort((a, b) => a.rawDistance - b.rawDistance);
@@ -235,8 +237,8 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-emerald-500/30 pb-20">
-      <header className="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sticky top-0 z-[100] shadow-sm">
-        <div className="max-w-md mx-auto flex items-center justify-between relative px-6">
+      <header className="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 pt-[max(0.75rem,env(safe-area-inset-top))] sticky top-0 z-[100] shadow-sm">
+        <div className="max-w-md mx-auto flex items-center justify-between relative px-6 pb-3">
           <div className="w-10 h-10"></div>
           <h1 className="text-3xl font-black font-display tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-emerald-100 to-emerald-500 uppercase">
             Pumpprice
@@ -248,21 +250,23 @@ function AppContent() {
             <UserIcon className="w-5 h-5" />
           </button>
         </div>
+        <div className="w-full bg-gradient-to-r from-blue-600/20 via-slate-800/50 to-red-600/20 border-t border-slate-800/50 py-1.5 text-center shadow-inner">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300 flex items-center justify-center gap-3">
+            <span className="text-xs leading-none animate-pulse">🇫🇷</span> Now tracking French fuel stations! <span className="text-xs leading-none animate-pulse">🇫🇷</span>
+          </span>
+        </div>
       </header>
-
       <main className="max-w-md mx-auto py-6 space-y-3">
-        <PriceProjectionCard />
 
         <div className="text-center mb-4 px-8">
           <p className="text-base sm:text-lg font-extrabold text-white leading-snug tracking-tight">
             {searchMode === 'route' ? (
               <>Find the <span className={`underline decoration-2 underline-offset-4 transition-colors duration-500 ${fuelType === 'diesel' ? 'decoration-sky-400' : 'decoration-emerald-400'}`}>cheapest</span> real-time fuel prices along your planned journey.</>
             ) : (
-              <>Find the absolute <span className={`underline decoration-2 underline-offset-4 transition-colors duration-500 ${fuelType === 'diesel' ? 'decoration-sky-400' : 'decoration-emerald-400'}`}>cheapest</span> or closest fuel near any UK postcode.</>
+              <>Find the absolute <span className={`underline decoration-2 underline-offset-4 transition-colors duration-500 ${fuelType === 'diesel' ? 'decoration-sky-400' : 'decoration-emerald-400'}`}>cheapest</span> or closest fuel near any UK or French postcode.</>
             )}
           </p>
         </div>
-
         <section className={`mx-6 p-6 rounded-3xl border-2 overflow-hidden space-y-6 relative transition-all duration-500 bg-gradient-to-b from-slate-800/80 to-slate-900 shadow-2xl ${fuelType === 'diesel' ? 'border-sky-500/40 shadow-sky-500/20' : 'border-emerald-500/40 shadow-emerald-500/20'}`}>
           <div className={`absolute -top-24 -left-24 w-72 h-72 rounded-full mix-blend-screen filter blur-[80px] opacity-20 pointer-events-none transition-colors duration-700 ${fuelType === 'diesel' ? 'bg-sky-500' : 'bg-emerald-500'}`}></div>
           
@@ -296,7 +300,7 @@ function AppContent() {
                 <div className={`w-3 h-3 rounded-full shadow-[0_0_10px_currentColor] ${fuelType === 'diesel' ? 'bg-sky-500 text-sky-500' : 'bg-emerald-500 text-emerald-500'}`}></div>
               </div>
               <div className="flex-1">
-                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1 block">{searchMode === 'route' ? 'Start Postcode' : 'Your Postcode'}</label>
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1 block">{searchMode === 'route' ? 'Start Postcode (UK or FR)' : 'Your Postcode (UK or FR)'}</label>
                 <div className="relative">
                   <input 
                     type="text" 
@@ -332,7 +336,7 @@ function AppContent() {
                 <MapPin className="w-4 h-4 text-rose-500" />
               </div>
               <div className="flex-1">
-                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1 block">End Postcode</label>
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1 block">End Postcode (UK or FR)</label>
                 <input 
                   type="text" 
                   placeholder="e.g. BS1 5TR" 
@@ -434,25 +438,46 @@ function AppContent() {
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <div className="flex items-center gap-2">
+                            <span className="text-sm grayscale-[0.2]">{station.countryCode === 'FR' ? '🇫🇷' : '🇬🇧'}</span>
                             <h3 className="font-bold text-lg text-white">{station.brand}</h3>
                             {station.isMotorway && <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-amber-500/30">Motorway</span>}
-                          </div>
-                          <p className="text-sm text-slate-400 mt-0.5">{station.address}</p>
+                          </div>                          <p className="text-sm text-slate-400 mt-0.5">{station.address}</p>
                           <p className="text-xs text-slate-500 mt-2 flex items-center gap-1"><Navigation className="w-3 h-3" /> {station.distance}</p>
                         </div>
                         <div className="text-right">
-                          <div className="flex items-baseline gap-1 justify-end"><span className={`text-3xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>{station.price}</span><span className="text-sm font-semibold text-slate-500">p</span></div>
-                          <div className="text-[10px] text-slate-500/80 font-medium mt-1 pr-1">Updated: {station.lastUpdated}</div>
-                        </div>
-                      </div>
+                          <div className="flex items-baseline gap-0.5 justify-end">
+                            {station.countryCode === 'GB' ? (
+                              <>
+                                <span className={`text-3xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
+                                  {Math.floor(station.price)}.9
+                                </span>
+                                <span className="text-sm font-semibold text-slate-500">p</span>
+                              </>
+                            ) : (                              <>
+                                <span className="text-sm font-bold text-slate-500 mr-1">€</span>
+                                <span className={`text-3xl font-black tracking-tighter ${index === 0 ? (fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400') : 'text-slate-200'}`}>
+                                  {(station.price / 100).toFixed(2)}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <div className="text-[10px] text-slate-500/80 font-medium mt-1 pr-1">Price changed:  {station.lastUpdated}</div>
+                        </div>                      </div>
                       <button onClick={() => setSelectedStation(station)} className="w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors border border-slate-700"><MapPin className={`w-4 h-4 ${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'}`} /> Navigate Here</button>
                     </div>
                     {index === 0 && stats && (
                       <div className={`bg-gradient-to-br border-l border-r border-b rounded-b-2xl p-4 flex flex-col gap-3 ${fuelType === "diesel" ? "from-sky-500/10 to-blue-500/5 border-sky-500/20" : "from-emerald-500/10 to-teal-500/5 border-emerald-500/20"}`}>
-                        <div className="flex justify-between items-center text-sm"><span className={`font-medium ${fuelType === "diesel" ? "text-sky-300/80" : "text-emerald-300/80"}`}>{searchMode === 'local' ? 'vs. National Highest:' : 'vs. Most Expensive:'}</span><span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.maxPrice - station.price).toFixed(1)}p / L cheaper</span></div>
-                        <div className="flex justify-between items-center text-sm"><span className={`font-medium ${fuelType === "diesel" ? "text-sky-300/80" : "text-emerald-300/80"}`}>{searchMode === 'local' ? 'vs. National Average:' : (endPostcode ? 'vs. Route Average:' : 'vs. Local Average:')}</span><span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.avgPrice - station.price).toFixed(1)}p / L cheaper</span></div>
-                        <div className={`pt-3 border-t mt-1 flex justify-between items-end ${fuelType === "diesel" ? "border-sky-500/10" : "border-emerald-500/10"}`}><div className="text-xs text-slate-400 max-w-[60%]">Estimated savings on a full 60L tank vs max</div><div className={`text-xl font-black tracking-tight ${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'}`}>Save £{(((stats.maxPrice - station.price) * 60) / 100).toFixed(2)}</div></div>
-                      </div>
+                        <div className="flex justify-between items-center text-sm"><span className={`font-medium ${fuelType === "diesel" ? "text-sky-300/80" : "text-emerald-300/80"}`}>{searchMode === 'local' ? 'vs. National Highest:' : 'vs. Most Expensive:'}</span><span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.maxPrice - station.price).toFixed(1)}{station.countryCode === 'GB' ? 'p' : 'c'} / L cheaper</span></div>
+                        <div className="flex justify-between items-center text-sm"><span className={`font-medium ${fuelType === "diesel" ? "text-sky-300/80" : "text-emerald-300/80"}`}>{searchMode === 'local' ? 'vs. National Average:' : (endPostcode ? 'vs. Route Average:' : 'vs. Local Average:')}</span><span className={`${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'} font-bold`}>{(stats.avgPrice - station.price).toFixed(1)}{station.countryCode === 'GB' ? 'p' : 'c'} / L cheaper</span></div>                        <div className={`pt-3 border-t mt-1 flex justify-between items-end ${fuelType === "diesel" ? "border-sky-500/10" : "border-emerald-500/10"}`}>
+                          <div className="text-xs text-slate-400 max-w-[60%]">Estimated savings on a full 60L tank vs max</div>
+                          <div className={`text-xl font-black tracking-tight ${fuelType === 'diesel' ? 'text-sky-400' : 'text-emerald-400'}`}>
+                            {station.countryCode === 'GB' ? (
+                              <>Save £{(((stats.maxPrice - station.price) * 60) / 100).toFixed(2)}</>
+                            ) : (
+                              <>Save €{(((stats.maxPrice - station.price) * 60) / 100).toFixed(2)}</>
+                            )}
+                          </div>
+                        </div>                      </div>
                     )}
                   </div>
                 </div>
@@ -460,7 +485,7 @@ function AppContent() {
               {results.filter(s => s.isStale).length > 0 && <div className="mt-8 mb-2"><h2 className="text-xl font-bold text-slate-300 px-1 border-b border-slate-800 pb-2">Fuel stations with stale data</h2></div>}
               {results.filter(s => s.isStale).map((station) => (
                 <div key={station.id} className="space-y-4 opacity-75">
-                  <div className="flex flex-col"><div className="relative bg-slate-900/50 p-5 border border-slate-800/50 rounded-2xl"><div className="flex justify-between items-start"><div><div className="flex items-center gap-2"><h3 className="font-bold text-lg text-slate-400">{station.brand}</h3>{station.isMotorway && <span className="bg-amber-500/10 text-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-amber-500/20">Motorway</span>}</div><p className="text-sm text-slate-500 mt-0.5">{station.address}</p><p className="text-xs text-slate-600 mt-2 flex items-center gap-1"><Navigation className="w-3 h-3" /> {station.distance}</p></div><div className="text-right flex flex-col items-end"><div className="h-8"></div><div className="text-[10px] text-slate-600 font-medium mt-1 pr-1">Updated: {station.lastUpdated}</div></div></div></div></div>
+                  <div className="flex flex-col"><div className="relative bg-slate-900/50 p-5 border border-slate-800/50 rounded-2xl"><div className="flex justify-between items-start"><div><div className="flex items-center gap-2"><h3 className="font-bold text-lg text-slate-400">{station.brand}</h3>{station.isMotorway && <span className="bg-amber-500/10 text-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-amber-500/20">Motorway</span>}</div><p className="text-sm text-slate-500 mt-0.5">{station.address}</p><p className="text-xs text-slate-600 mt-2 flex items-center gap-1"><Navigation className="w-3 h-3" /> {station.distance}</p></div><div className="text-right flex flex-col items-end"><div className="h-8"></div><div className="text-[10px] text-slate-600 font-medium mt-1 pr-1">Price changed:  {station.lastUpdated}</div></div></div></div></div>
                 </div>
               ))}
             </div>
